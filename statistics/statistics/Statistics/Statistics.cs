@@ -56,6 +56,26 @@ namespace hsb.Statistics
         }
         #endregion
 
+        #region - Median : 中央値を取得する
+        /// <summary>
+        /// 中央値を取得する
+        /// </summary>
+        /// <typeparam name="T">型パラメータ</typeparam>
+        /// <param name="source">投入データ</param>
+        /// <param name="convert">投入データから中央値を求める値を返す関数</param>
+        /// <returns>中央値</returns>
+        public static double Median<T>(this IEnumerable<T> source, Func<T, double> convert)
+        {
+            var sortedList = source.Select(convert).OrderBy(d => d).ToArray();
+            var size = sortedList.Count();
+            if (size % 2 == 0)
+                // 要素が偶数なら中央の２つの平均値を返す
+                return (sortedList[size / 2 - 1] + sortedList[size / 2]) / 2.0d;
+            else
+                return sortedList[size / 2];
+        }
+        #endregion
+
         #region - Histogram : ヒストグラムを取得する
         /// <summary>
         /// ヒストグラムを取得する

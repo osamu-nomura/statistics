@@ -50,6 +50,23 @@ namespace hsb.Statistics.Tests
         }
         #endregion
 
+        #region - MedianTest
+        /// <summary>
+        /// Test of Median
+        /// </summary>
+        [TestMethod()]
+        public void MedianTest()
+        {
+            var sales = new int[]
+            {
+                2024, 2164, 6465, 2186, 2348, 1981, 2256, 3177, 1861, 3249,
+                2464, 1975, 2496, 3246, 2465, 1654, 2654, 3321, 6612, 3189
+            };
+            Func<int, double> cv = (n) => (double)n;
+            Assert.AreEqual(2464, Math.Round(Statistics.Median(sales, cv), 0));
+        }
+        #endregion
+
         #region - HistogramTest
         /// <summary>
         /// Test of Histogram
