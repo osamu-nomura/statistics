@@ -76,6 +76,48 @@ namespace hsb.Statistics
         }
         #endregion
 
+        #region - GeometricMean : 幾何平均を取得する
+        /// <summary>
+        ///  幾何平均を取得する
+        /// </summary>
+        /// <typeparam name="T">型パラメータ</typeparam>
+        /// <param name="source">投入データ</param>
+        /// <param name="convert">投入データから平均値を求める値を返す関数</param>
+        /// <returns>平均値</returns>
+        public static double GeometricMean<T>(this IEnumerable<T> source, Func<T, double> convert)
+        {
+            var sum = 1d;
+            var count = 0;
+            foreach (var data in source)
+            {
+                count++;
+                sum *= convert(data);
+            }
+            return Math.Pow(sum, (1.0d / count));
+        }
+        #endregion
+
+        #region - HarmonicMean : 調和平均を取得する。
+        /// <summary>
+        /// 調和平均を取得する。
+        /// </summary>
+        /// <typeparam name="T">型パラメータ</typeparam>
+        /// <param name="source">投入データ</param>
+        /// <param name="convert">投入データから平均値を求める値を返す関数</param>
+        /// <returns>平均値</returns>
+        public static double HarmonicMean<T>(this IEnumerable<T> source, Func<T, double> convert)
+        {
+            var sum = 0d;
+            var count = 0;
+            foreach (var data in source)
+            {
+                count++;
+                sum += (1.0d / convert(data));
+            }
+            return count / sum;
+        }
+        #endregion
+
         #region - Histogram : ヒストグラムを取得する
         /// <summary>
         /// ヒストグラムを取得する

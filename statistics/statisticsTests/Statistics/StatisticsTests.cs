@@ -67,6 +67,30 @@ namespace hsb.Statistics.Tests
         }
         #endregion
 
+        #region - GeometricMeanTest
+        /// <summary>
+        /// Test of GeometricMean
+        /// </summary>
+        [TestMethod()]
+        public void GeometricMeanTest()
+        {
+            var rate = new double[] { 1 + 0.2d, 1 - 0.3d, 1 + 0.1d };
+            Assert.AreEqual(0.974d, Math.Round(Statistics.GeometricMean(rate, (n) => n), 3, MidpointRounding.AwayFromZero));            
+        }
+        #endregion
+
+        #region - HarmonicMeanTest
+        /// <summary>
+        /// Test of HarmonicMean
+        /// </summary>
+        [TestMethod()]
+        public void HarmonicMeanTest()
+        {
+            var rate = new int[] { 110, 90 };
+            Assert.AreEqual(99d, Math.Round(Statistics.HarmonicMean(rate, (n) => (double)n), 0, MidpointRounding.AwayFromZero));
+        }
+        #endregion
+
         #region - HistogramTest
         /// <summary>
         /// Test of Histogram
