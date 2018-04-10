@@ -20,7 +20,7 @@ namespace hsb.Statistics
         /// <param name="source">投入データ</param>
         /// <param name="convert">投入データから平均値を求める値を返す関数</param>
         /// <returns>平均値</returns>
-        public static double Average<T>(this IEnumerable<T> source, Func<T,double> convert)
+        public static double Average<T>(this IEnumerable<T> source, Func<T, double> convert)
         {
             var count = 0;
             var sum = 0d;
@@ -30,6 +30,29 @@ namespace hsb.Statistics
                 sum += convert(data);
             }
             return sum / count;
+        }
+        #endregion
+
+        #region - TrimedMean : 刈り込み平均を取得する
+        /// <summary>
+        /// 刈り込み平均を取得する
+        /// </summary>
+        /// <typeparam name="T">型パラメータ</typeparam>
+        /// <param name="source">投入データ</param>
+        /// <param name="convert">投入データから平均値を求める値を返す関数</param>
+        /// <param name="rate">刈り込み率</param>
+        /// <returns>平均値</returns>
+        public static double TrimedMean<T>(this IEnumerable<T> source, Func<T, double> convert, double rate)
+        {
+            var sortedList = source.Select(convert).OrderBy(d => d).ToArray();
+            var size = sortedList.Count();
+            var n = (int)Math.Floor(size * rate / 2.0d);
+            var sum = 0d;
+            for (var i = n; i < (size - n); i++)
+            {
+                sum += sortedList[i];
+            }
+            return sum / (size - (n * 2));
         }
         #endregion
 
@@ -68,6 +91,7 @@ namespace hsb.Statistics
         /// <returns>相対度数</returns>
         public static double[] RelativeFrequency<T>(this IEnumerable<T> source, Func<T, double> convert, int digits = 2)
         {
+            // 相対度数＝値÷合計
             var sum = source.Sum(convert);
             return source.Select(data => Math.Round(convert(data) / sum, digits)).ToArray();
         }

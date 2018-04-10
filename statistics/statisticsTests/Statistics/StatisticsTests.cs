@@ -30,6 +30,26 @@ namespace hsb.Statistics.Tests
         }
         #endregion
 
+        #region - TrimedMeanTest
+        /// <summary>
+        /// Test of TrimedMean
+        /// </summary>
+        [TestMethod()]
+        public void TrimedMeanTest()
+        {
+            // 末尾の0,0はダミー
+            var sales = new int[]
+            {
+                2024, 2164, 6465, 2186, 2348, 1981, 2256, 3177, 1861, 3249,
+                2464, 1975, 2496, 3246, 2465, 1654, 2654, 3321, 6612, 3189,
+                0, 0
+            };
+            Func<int, double> cv = (n) => (double)n;
+            Assert.AreEqual(2889, Math.Round(Statistics.Average(sales.Take(20), cv), 0));
+            Assert.AreEqual(2484, Math.Round(Statistics.TrimedMean(sales, cv, 0.2d), 0));
+        }
+        #endregion
+
         #region - HistogramTest
         /// <summary>
         /// Test of Histogram
@@ -72,6 +92,7 @@ namespace hsb.Statistics.Tests
                 Statistics.RelativeFrequency(histogram, cv, 3)));
         }
         #endregion
+
     }
     #endregion
 }
