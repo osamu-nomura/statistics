@@ -76,6 +76,30 @@ namespace hsb.Statistics
         }
         #endregion
 
+        #region - Mode : 最頻値を返す
+        /// <summary>
+        /// 最頻値を返す
+        /// </summary>
+        /// <typeparam name="T1">型パラメータ1</typeparam>
+        /// <typeparam name="T2">型パラメータ2</typeparam>
+        /// <param name="source">投入データ</param>
+        /// <param name="convert">投入データから最頻値を求める値を返す関数</param>
+        /// <returns>最頻値</returns>
+        public static T2 Mode<T1,T2>(this IEnumerable<T1> source, Func<T1, T2> convert)
+        {
+            var dict = new Dictionary<T2, int>();
+            foreach (var data in source)
+            {
+                var v = convert(data);
+                if (dict.ContainsKey(v))
+                    dict[v]++;
+                else
+                    dict.Add(v, 1);
+            }
+            return dict.OrderByDescending(kv => kv.Value).First().Key;
+        }
+        #endregion
+
         #region - GeometricMean : 幾何平均を取得する
         /// <summary>
         ///  幾何平均を取得する

@@ -75,7 +75,7 @@ namespace hsb.Statistics.Tests
         public void GeometricMeanTest()
         {
             var rate = new double[] { 1 + 0.2d, 1 - 0.3d, 1 + 0.1d };
-            Assert.AreEqual(0.974d, Math.Round(Statistics.GeometricMean(rate, (n) => n), 3, MidpointRounding.AwayFromZero));            
+            Assert.AreEqual(0.974d, Math.Round(Statistics.GeometricMean(rate, (n) => n), 3, MidpointRounding.AwayFromZero));
         }
         #endregion
 
@@ -134,6 +134,20 @@ namespace hsb.Statistics.Tests
         }
         #endregion
 
+        #region - ModeTest
+        /// <summary>
+        /// Test of Mode
+        /// </summary>
+        [TestMethod()]
+        public void ModeTest()
+        {
+            var values1 = new int[] { 0, 1, 3, 4, 1, 2, 3, 1, 5, 2, 1 };
+            Assert.AreEqual(1, Statistics.Mode(values1, v => v));
+
+            var values2 = new string[] { "A", "A", "B", "B", "B", "C", "D" };
+            Assert.AreEqual("B", Statistics.Mode(values2, v => v));
+        }
+        #endregion
     }
     #endregion
 }
