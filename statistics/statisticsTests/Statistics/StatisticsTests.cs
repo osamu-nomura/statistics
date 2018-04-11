@@ -148,6 +148,116 @@ namespace hsb.Statistics.Tests
             Assert.AreEqual("B", Statistics.Mode(values2, v => v));
         }
         #endregion
+
+        #region - DeviationTest
+        /// <summary>
+        /// Test of Deviation
+        /// </summary>
+        [TestMethod()]
+        public void DeviationTest()
+        {
+            var data = new int[]
+            {
+                51, 63, 63, 90, 48, 72,
+                48, 69, 87, 87, 84, 75,
+                78, 81, 57, 87, 75, 57,
+                48, 57, 69, 81, 54, 90,
+                78, 66, 66, 72, 78, 69
+            };
+            var expected = new double[]
+            {
+                -19d,  -7d,  -7d,  20d, -22d,   2d,
+                -22d,  -1d,  17d,  17d,  14d,   5d,
+                  8d,  11d, -13d,  17d,   5d, -13d,
+                -22d, -13d,  -1d,  11d, -16d,  20d,
+                  8d,  -4d,  -4d,   2d,   8d,  -1d
+            };
+            Assert.IsTrue(expected.SequenceEqual(
+                Statistics.Deviation(data, n => (double)n)));
+            Assert.IsTrue(expected.SequenceEqual(
+                Statistics.Deviation(data, n => (double)n, 70.0d)));
+        }
+        #endregion
+
+        #region VarianceTest
+        /// <summary>
+        /// Test of Variance
+        /// </summary>
+        [TestMethod()]
+        public void VarianceTest()
+        {
+            var data = new int[]
+            {
+                51, 63, 63, 90, 48, 72,
+                48, 69, 87, 87, 84, 75,
+                78, 81, 57, 87, 75, 57,
+                48, 57, 69, 81, 54, 90,
+                78, 66, 66, 72, 78, 69
+            };
+            Assert.AreEqual(168.8d, Math.Round(
+                Statistics.Variance(data, n => (double)n), 1, MidpointRounding.AwayFromZero));
+            Assert.AreEqual(168.8d, Math.Round(
+                Statistics.Variance(data, n => (double)n, 70.0d), 1, MidpointRounding.AwayFromZero));
+        }
+        #endregion
+
+        #region - StandardDeviationTest
+        /// <summary>
+        /// Test of StandardDeviation
+        /// </summary>
+        [TestMethod()]
+        public void StandardDeviationTest()
+        {
+            var data = new int[]
+            {
+                51, 63, 63, 90, 48, 72,
+                48, 69, 87, 87, 84, 75,
+                78, 81, 57, 87, 75, 57,
+                48, 57, 69, 81, 54, 90,
+                78, 66, 66, 72, 78, 69
+            };
+            Assert.AreEqual(12.99d, Math.Round(
+                Statistics.StandardDeviation(data, n => (double)n), 2, MidpointRounding.AwayFromZero));
+        }
+        #endregion
+
+        #region - StandardizationTest1
+        /// <summary>
+        /// Test of Standardization1
+        /// </summary>
+        [TestMethod()]
+        public void StandardizationTest1()
+        {
+            Assert.AreEqual(1.92d, Math.Round(
+                Statistics.Standardization(95.0d, 70.0d, 12.99d), 2, MidpointRounding.AwayFromZero));
+        }
+        #endregion
+
+        #region - StandardizationTest2
+        /// <summary>
+        /// Test of Standardization2
+        /// </summary>
+        [TestMethod()]
+        public void StandardizationTest2()
+        {
+            var data = new int[]
+            {
+                51, 63, 63, 90, 48, 72,
+                48, 69, 87, 87, 84, 75,
+                78, 81, 57, 87, 75, 57,
+                48, 57, 69, 81, 54, 90,
+                78, 66, 66, 72, 78, 69
+            };
+
+            var sd = Math.Round(Statistics.StandardDeviation(data, n => (double)n), 2, MidpointRounding.AwayFromZero);
+            var expected = data.Select(n => Statistics.Standardization(n, 70.0d, sd))
+                               .ToArray();
+            var result = Statistics.Standardization(data, n => (double)n, 70.0d, sd);
+            Assert.IsTrue(expected.SequenceEqual(result));
+
+        }
+        #endregion
+
     }
     #endregion
 }

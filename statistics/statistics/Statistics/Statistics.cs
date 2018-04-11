@@ -182,6 +182,86 @@ namespace hsb.Statistics
             return source.Select(data => Math.Round(convert(data) / sum, digits)).ToArray();
         }
         #endregion
+
+        #region -  Deviation : 偏差を取得する
+        /// <summary>
+        /// 偏差を取得する
+        /// </summary>
+        /// <typeparam name="T">型パラメータ</typeparam>
+        /// <param name="source">投入データ</param>
+        /// <param name="convert">投入データから偏差を求める値を返す関数</param>
+        /// <param name="average">投入データの平均値(オプション)</param>
+        /// <returns>偏差のリスト</returns>
+        public static double[] Deviation<T>(IEnumerable<T> source, Func<T, double> convert, double? average = null)
+        {
+            if (average == null)
+                average = Average(source, convert);
+            return source.Select(data => convert(data) - average.Value).ToArray();
+        }
+        #endregion
+
+        #region - Variance : 分散を取得する
+        /// <summary>
+        /// 分散を取得する
+        /// </summary>
+        /// <typeparam name="T">型パラメータ</typeparam>
+        /// <param name="source">投入データ</param>
+        /// <param name="convert">投入データから分散を求める値を返す関数</param>
+        /// <param name="average">投入データの平均値(オプション)</param>
+        /// <returns>分散</returns>
+        public static double Variance<T>(IEnumerable<T> source, Func<T, double> convert, double? average = null)
+        {
+            var deviations = Deviation(source, convert, average);
+            return deviations.Sum(d => Math.Pow(d, 2)) / deviations.Count();
+        }
+        #endregion
+
+        #region - StandardDeviation : 標準偏差を取得する
+        /// <summary>
+        /// 標準偏差を取得する
+        /// </summary>
+        /// <typeparam name="T">型パラメータ</typeparam>
+        /// <param name="source">投入データ</param>
+        /// <param name="convert">投入データから標準偏差を求める値を返す関数</param>
+        /// <param name="average">投入データの平均値(オプション)</param>
+        /// <returns>標準偏差</returns>
+        public static double StandardDeviation<T>(IEnumerable<T> source, Func<T, double> convert, double? average = null)
+        {
+            return Math.Sqrt(Variance(source, convert, average));
+        }
+        #endregion
+
+        #region - Standardization : 標準化データを取得する
+        /// <summary>
+        /// 標準化データを取得する
+        /// </summary>
+        /// <typeparam name="T">型パラメータ</typeparam>
+        /// <param name="source">投入データ</param>
+        /// <param name="convert">投入データから標準化データを求める値を返す関数</param>
+        /// <param name="average">投入データの平均値(オプション)</param>
+        /// <returns>標準化データのリスト</returns>
+        public static double[] Standardization<T>(IEnumerable<T> source, Func<T, double> convert, double? average = null, double? sd = null)
+        {
+            var deviations = Deviation(source, convert, average);
+            if (sd == null)
+                sd = Math.Sqrt(deviations.Sum(d => Math.Pow(d, 2)) / deviations.Count());
+            return deviations.Select(n => n / sd.Value).ToArray();
+        }
+        #endregion
+
+        #region - Standardization : 標準化データを取得する
+        /// <summary>
+        /// 標準化データを取得する
+        /// </summary>
+        /// <param name="value">投入値</param>
+        /// <param name="average">平均値</param>
+        /// <param name="sd">標準偏差</param>
+        /// <returns>標準化データ</returns>
+        public static double Standardization(double value, double average, double sd)
+        {
+            return (value - average) / sd;
+        }
+        #endregion
     }
     #endregion
 }
